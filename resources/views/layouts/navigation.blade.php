@@ -34,8 +34,8 @@
                             </x-slot>
 
                             <x-slot name="content">
-                                <x-dropdown-link :href="route('cursos')">
-                                    {{ __('Cursos') }}
+                                <x-dropdown-link :href="route('Departamento TI')">
+                                    {{ __('DptoTI') }}
                                 </x-dropdown-link>
                             </x-slot>
                         </x-dropdown>
