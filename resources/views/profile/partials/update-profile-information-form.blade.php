@@ -19,18 +19,19 @@
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
         
+        @if (Auth::user()->rol == 'administrador') 
+            <div>
+                <x-input-label for="rol" :value="__('Rol')" />
+                    <x-text-input id="rol" name="rol" type="text" class="mt-1 block w-full" :value="old('rol', $user->rol)" required autofocus autocomplete="rol" />
+                <x-input-error class="mt-2" :messages="$errors->get('rol')" />
+            </div>
+        @endif
+
         <div>
-            <x-input-label for="rol" :value="__('Rol')" />
-        
-            @if (Auth::user()->rol !== 'administrador') 
-                <x-text-input id="rol" name="rol" type="text" class="mt-1 block w-full" :value="old('rol', $user->rol)" required autofocus autocomplete="rol" readonly />
-            @else
-                <x-text-input id="rol" name="rol" type="text" class="mt-1 block w-full" :value="old('rol', $user->rol)" required autofocus autocomplete="rol" />
-            @endif
-        
-            <x-input-error class="mt-2" :messages="$errors->get('rol')" />
+            <x-input-label for="telefono" :value="__('Telefono')" />
+                <x-text-input id="telefono" name="telefono" type="text" class="mt-1 block w-full" :value="old('telefono', $user->telefono)" required autofocus autocomplete="telefono" />
+            <x-input-error class="mt-2" :messages="$errors->get('telefono')" />
         </div>
-        
 
         <div>
             <x-input-label for="email" :value="__('Correo')" />
