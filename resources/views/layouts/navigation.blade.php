@@ -18,7 +18,7 @@
                     </x-nav-link>
                 </div>
 
-                <!-- Solicitudes Dropdown -->
+                <!-- Solicitudes Dropdown
                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                     <x-dropdown align="left" width="48">
                         <x-slot name="trigger">
@@ -43,43 +43,48 @@
                             </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
-                </div>
+                </div>-->
             </div>
 
             <!-- Usuario - Perfiles -->
 
             <div class="hidden sm:flex sm:items-center sm:ml-6">
 
-                @php $url = $_SERVER['REQUEST_URI'] @endphp {{--Captura la URL en una variable--}}
+                @php $url = $_SERVER['REQUEST_URI'] @endphp {{-- Captura la URL en una variable --}}
                 <!-- Validación boton Crear Usuarios -->
-                @if ($url == "/sistemaSapp/public/profile/usuarios")
+                @if ($url == '/sistemaSapp/public/profile/usuarios')
                     <div class="flex items-center mx-2">
                         <div id="crear-modal" class="flex items-center gap-4">
                             <x-danger-button>{{ __('Crear Usuario') }}</x-danger-button>
                         </div>
-                    </div>                
+                    </div>
                 @endif
                 <!-- Validación boton Crear Categorias -->
-                @if ($url == "/sistemaSapp/public/solicitudes/categorias")
+                @if ($url == '/sistemaSapp/public/solicitudes/categorias')
                     <div class="flex items-center mx-2">
                         <div id="crear-modal" class="flex items-center gap-4">
                             <x-danger-button>{{ __('Crear Categoría') }}</x-danger-button>
                         </div>
-                    </div>               
+                    </div>
+                @endif
+                <!-- Validación boton Crear Sub-Categorias -->
+                @if ($url == '/sistemaSapp/public/solicitudes/subcategorias')
+                    <div class="flex items-center mx-2">
+                        <div id="crear-modal" class="flex items-center gap-4">
+                            <x-danger-button>{{ __('Crear Sub-Categoría') }}</x-danger-button>
+                        </div>
+                    </div>
                 @endif
 
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
                             class="h-12 inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                            
+
                             @if (Auth::check())
                                 <div>{{ Auth::user()->name }}</div>
                             @endif
-                            
-                            
-                            
-                            
+
 
                             <div class="ml-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
@@ -89,10 +94,14 @@
                                         clip-rule="evenodd" />
                                 </svg>
                             </div>
-                            @if (Auth::user()->avatar != "")
-                                <img class="mt-1 h-9 w-10 rounded-full" src="{{ asset(Auth::user()->avatar) }}" alt="">
-                            @else
-                                <img class="mt-1 h-9 w-10 rounded-full" src="{{ asset('images/user.png') }}" alt="">
+                            @if (Auth::check())
+                                @if (Auth::user()->avatar != '')
+                                    <img class="mt-1 h-9 w-10 rounded-full" src="{{ asset(Auth::user()->avatar) }}"
+                                        alt="">
+                                @else
+                                    <img class="mt-1 h-9 w-10 rounded-full" src="{{ asset('images/user.png') }}"
+                                        alt="">
+                                @endif
                             @endif
                         </button>
                     </x-slot>
@@ -101,22 +110,27 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Perfil') }}
                         </x-dropdown-link>
-                        
-                        @if (Auth::user()->rol == 'administrador')
-                        <!-- Menu Categorias -->
-                        <x-dropdown-link :href="route('categorias')">
-                            {{ __('Categorias') }}
-                        </x-dropdown-link>
 
-                        <!-- Menu Usuarios -->
+                        @if (Auth::user()->rol == 'administrador')
+                            <!-- Menu Categorias -->
+                            <x-dropdown-link :href="route('categorias')">
+                                {{ __('Categorias') }}
+                            </x-dropdown-link>
+
+                            <!-- Menu Sub-Categorias -->
+                            <x-dropdown-link :href="route('subcategorias')">
+                                {{ __('Sub-Categorias') }}
+                            </x-dropdown-link>
+
+                            <!-- Menu Usuarios -->
                             <x-dropdown-link :href="route('profile.usuarios')">
                                 {{ __('Usuarios') }}
                             </x-dropdown-link>
                         @endif
+
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-
                             <x-dropdown-link :href="route('logout')"
                                 onclick="event.preventDefault();
                                                     this.closest('form').submit();">
@@ -155,8 +169,9 @@
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">
-                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ isset(Auth::user()->name) }}
+                </div>
+                <div class="font-medium text-sm text-gray-500">{{ isset(Auth::user()->email) }}</div>
             </div>
 
             <div class="mt-3 space-y-1">
@@ -178,4 +193,3 @@
         </div>
     </div>
 </nav>
-

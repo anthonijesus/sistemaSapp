@@ -52,6 +52,11 @@ class ProfileController extends Controller
 
     public function index(){ //administra la vista y la tabla de usuarios
         
+        
+        if (Auth::user()->rol != 'administrador') {
+            echo "<script>window.location.href = '../';</script>";
+        }
+
         $users = User::all();
 
         return view('profile.usuarios', compact('users'));

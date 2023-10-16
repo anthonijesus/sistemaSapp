@@ -1,4 +1,11 @@
-@section('titulo', 'Categorias')
+@section('titulo', 'Sub-Categorias')
+
+<?php
+if (Auth::user()->rol != 'administrador') {
+    echo "<script>window.location.href = '../';</script>";
+ }
+?>
+
 
 <x-app-layout>
     <div class="py-12">
@@ -29,28 +36,28 @@
                         {{ session('error') }}
                     </div>
                 @endif
-                <h1 class="text-3xl font-bold text-gray-800 text-center">Categorias</h1>
+                <h1 class="text-3xl font-bold text-gray-800 text-center">Sub-Categorias</h1>
                 <table id="myTable" class=" mx-auto min-w-full border rounded-lg overflow-hidden mt-3">
                     <thead class="bg-gray-100">
                         <tr>
                             <th class="w-3/24 px-2 py-2 text-center">ID</th>
+                            <th class="w-15/24 px-4 py-2 text-center">Categoria</th>
                             <th class="w-15/24 px-4 py-2 text-center">Nombre</th>
-                            <th class="w-15/24 px-4 py-2 text-center">Descripción</th>
                             <th class="w-36 px-2 py-2 text-center">Edición</th>
                         </tr>                                                
                     </thead>
                     <tbody class="bg-white">
-                        @foreach ($categorias as $categoria)
+                        @foreach ($subcategorias as $subcategoria)
                             <tr class="text-center">
-                                <td class="border px-4 py-2">{{ $categoria->id }}</td>
-                                <td class="border px-4 py-2">{{ $categoria->nombre }}</td>
-                                <td class="border px-4 py-2">{{ $categoria->descripcion }}</td>
+                                <td class="border px-4 py-2">{{ $subcategoria->id }}</td>
+                                <td class="border px-4 py-2">{{ $subcategoria->categoria->nombre }}</td>
+                                <td class="border px-4 py-2">{{ $subcategoria->nombre }}</td>
                                 <td class="border px-4 py-2">  
-                                    <a id="mostrarModal" data-nombres="{{ $categoria->nombre }}"
-                                        data-id="{{ $categoria->id }}" href="#" style="color: #EF4444;"><i class="fa-solid fa-trash mx-2"></i>
+                                    <a id="mostrarModal" data-nomb="{{ $subcategoria->nombre }}"
+                                        data-id="{{ $subcategoria->id }}" href="#" style="color: #EF4444;"><i class="fa-solid fa-trash mx-2"></i>
                                     </a>
-                                    <a id="editarModal" data-ids="{{ $categoria->id }}"
-                                        data-nombre="{{ $categoria->nombre }}" data-descripcion="{{ $categoria->descripcion }}"
+                                    <a id="editarModal" data-ids="{{ $subcategoria->id }}"
+                                        data-nombre="{{ $subcategoria->nombre }}" data-categoria="{{ $subcategoria->categoria_id }}"
                                         href="#"><i class="fa-solid fa-pen ml-3" style="color: #0D6EFD;"></i>
                                     </a>
                                 </td>
@@ -64,26 +71,33 @@
         </div>
     </div>
 
-    <!-- Modal Crear Categoria -->
+    <!-- Modal Crear Sub-Categoria -->
 <div id="crea-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
     <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
     <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
         <div class="modal-content py-4 text-left px-6">
-            <h1 class="text-center text-xl text-dark-500"><i class="fa-solid fa-user"></i> Crear Nueva Categoria</h1>
+            <h1 class="text-center text-xl text-dark-500"><i class="fa-solid fa-user"></i> Crear Nueva Sub-Categoria</h1>
             <!-- Contenido del modal -->
-            <form method="post" action="{{ route('categorias.crear') }}" class="mt-2 space-y-6">
+            <form method="post" action="{{ route('subcategorias.crear') }}" class="mt-2 space-y-6">
                 @csrf
                 @method('post')
 
                 <div>
-                    <x-input-label for="nombre" :value="__('Nombre de Categoría')" />
+                    <x-input-label for="nombre" :value="__('Nombre de Sub-Categoría')" />
                     <x-text-input name="nombre" type="text" class="mt-1 block w-full" required autofocus
                         autocomplete="nombre" />
                 </div>
                 <div>
-                    <x-input-label for="descripcion" :value="__('Descripcion')" />
-                    <x-text-input name="descripcion" type="text" class="mt-1 block w-full" required autofocus
-                        autocomplete="descripcion" />
+                    <x-input-label for="categoria" :value="__('Categoria')" />
+                    <select name="categoria_id"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg rounded-md"
+                        required autofocus autocomplete="categoria">
+                        
+                        @foreach ( $categorias->sortBy('nombre') as $categoria )
+                            <option value="{{$categoria->id}}">{{$categoria->nombre}}</option>  
+                        @endforeach
+                        
+                    </select>
                 </div>
                 <div class="flex items-center gap-4">
                     <x-primary-button>{{ __('Crear') }}</x-primary-button>
@@ -97,29 +111,34 @@
         </div>
     </div>
 </div>
-<!-- FIN Modal Crear Categoria -->
+<!-- FIN Modal Crear Sub-Categoria -->
 
-<!-- Modal editar Categoria -->
+<!-- Modal editar Sub-Categoria -->
 <div id="editModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
     <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
     <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
         <div class="modal-content py-4 text-left px-6">
-            <h1 class="text-center text-xl text-dark-500"><i class="fa-solid fa-user"></i> Editar Categoria</h1>
+            <h1 class="text-center text-xl text-dark-500"><i class="fa-solid fa-user"></i> Editar Sub-Categoria</h1>
             <!-- Contenido del modal -->
-            <form method="post" id="editUser" action="{{ route('categorias.editar', 1) }}"
-                data-action="{{ route('categorias.editar', 1) }}" class="mt-2 space-y-6">
+            <form method="post" id="editUser" action="{{ route('subcategorias.editar', 1) }}"
+                data-action="{{ route('subcategorias.editar', 1) }}" class="mt-2 space-y-6">
                 @csrf
                 @method('post')
 
                 <div>
                     <x-input-label for="nombre" :value="__('Nombre')" />
-                    <x-text-input id="nombre" name="nombre" type="text" class="mt-1 block w-full" required
-                        autofocus autocomplete="nombre" />
+                    <x-text-input id="nombre" name="nombre" type="text" class="mt-1 block w-full" required autofocus autocomplete="nombre" />
                 </div>
                 <div>
-                    <x-input-label for="descripcion" :value="__('Descripcion')" />
-                    <x-text-input id="descripcion" name="descripcion" type="text" class="mt-1 block w-full" required
-                        autofocus autocomplete="descripcion" />
+                    <x-input-label for="categoria" :value="__('Categoria')" />
+                    <select id="categoria" name="categoria_id"
+                        class="notItemOne mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg rounded-md"
+                        required autofocus autocomplete="categoria">
+                        
+                        @foreach ( $categorias->sortBy('nombre') as $categoria )
+                            <option value="{{$categoria->id}}">{{$categoria->nombre}}</option>  
+                        @endforeach
+                    </select>
                 </div>
                 <div class="flex items-center gap-4">
                     <x-primary-button>{{ __('Actualizar') }}</x-primary-button>
@@ -133,24 +152,24 @@
         </div>
     </div>
 </div>
-<!-- FIN Modal editar Categoria -->
+<!-- FIN Modal editar Sub-Categoria -->
 
-<!-- Modal Eliminar Categoria -->
+<!-- Modal Eliminar Sub-Categoria -->
 <div id="miModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
     <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
     <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
         <!-- Contenido del modal -->
         <div class="modal-content py-4 text-left px-6">
             <!-- Contenido del modal -->
-            <form id="deleteUser" method="POST" action="{{ route('categorias.borrar', 1) }}"
-                data-action="{{ route('categorias.borrar', 1) }}">
+            <form id="deleteUser" method="POST" action="{{ route('subcategorias.borrar', 1) }}"
+                data-action="{{ route('subcategorias.borrar', 1) }}">
                 @csrf
                 @method('delete')
 
                 <div class="modal-body">
                     <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 mt-3">
-                        {{ __('Seguro que quiere eliminar esta Categoría?') }}
-                        <input name="nombre" id="nombres" type="text"
+                        {{ __('Seguro que quiere eliminar esta Sub-Categoría?') }}
+                        <input name="nombre" id="nomb" type="text"
                             style="border: none; color: rgb(110, 23, 37); width:100%;" readonly>
                     </h2>
 
@@ -176,5 +195,5 @@
         </div>
     </div>
 </div>
-<!-- FIN Modal Eliminar Categoria -->
+<!-- FIN Modal Eliminar Sub-Categoria -->
 </x-app-layout>

@@ -2,7 +2,6 @@
 
 <x-app-layout>
     <div class="py-12">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center"><i class="fa-solid fa-user"></i> Lista de Usuarios</h1>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 mt-3">
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
 
@@ -30,7 +29,7 @@
                         {{ session('error') }}
                     </div>
                 @endif
-
+                <h1 class="text-3xl font-bold text-gray-800 text-center">Usuarios</h1>
                 <table id="myTable" class=" mx-auto min-w-full border rounded-lg overflow-hidden mt-3">
                     <thead class="bg-gray-100">
                         <tr>
@@ -58,12 +57,12 @@
                                     <td class="border px-4 py-2">
                                         @if ($user->id != '1' || Auth::user()->id == '1')
                                             <a id="mostrarModal" data-name="{{ $user->name }}"
-                                                data-id="{{ $user->id }}" href="#"><i class="fa-solid fa-trash mx-2"></i>
+                                                data-id="{{ $user->id }}" href="#" style="color: #EF4444;"><i class="fa-solid fa-trash mx-2"></i>
                                             </a>
                                             <a id="editarModal" data-ids="{{ $user->id }}"
                                                 data-names="{{ $user->name }}" data-emails="{{ $user->email }}"
                                                 data-tel="{{ $user->telefono }}" data-rol="{{ $user->rol }}"
-                                                href="#"><i class="fa-solid fa-pen"></i>
+                                                href="#"><i class="fa-solid fa-pen" style="color: #0D6EFD;"></i>
                                             </a>
                                         @endif
                                     </td>
@@ -120,7 +119,7 @@
                 </div>
             </form>
             <div class="modal-footer mt-2 flex justify-between">
-                <button id="cerrarModal" class="modal-close bg-red-600 text-white font-bold py-2 px-4 rounded">
+                <button id="cerrarModal" class="modal-close bg-red-600 text-white font-bold py-1 px-4 rounded">
                     Cerrar
                 </button>
             </div>
@@ -139,7 +138,7 @@
             <form method="post" id="editUser" action="{{ route('profile.editar', 1) }}"
                 data-action="{{ route('profile.editar', 1) }}" class="mt-2 space-y-6">
                 @csrf
-                @method('post')
+                @method('patch')
 
                 <div>
                     <x-input-label for="name" :value="__('Nombre')" />
@@ -180,7 +179,7 @@
                 </div>
             </form>
             <div class="modal-footer mt-2 flex justify-between">
-                <button id="cerrarModal" class="modal-close bg-red-600 text-white font-bold py-2 px-4 rounded">
+                <button id="cerrarModal" class="modal-close bg-red-600 text-white font-bold py-1 px-4 rounded">
                     Cerrar
                 </button>
             </div>
@@ -223,7 +222,7 @@
             </form>
             <!-- Botón de cierre -->
             <div class="modal-footer mt-2 flex justify-between">
-                <button id="cerrarModal" class="modal-close bg-red-600 text-white font-bold py-2 px-4 rounded">
+                <button id="cerrarModal" class="modal-close bg-red-600 text-white font-bold py-1 px-4 rounded">
                     Cerrar
                 </button>
             </div>
