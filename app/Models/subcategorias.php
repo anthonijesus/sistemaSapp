@@ -12,4 +12,8 @@ class subcategorias extends Model
     {
         return $this->belongsTo(categorias::class, 'categoria_id');
     }
+    public function tabla_sol()
+    {
+        return $this->hasMany(tabla_solicitudes::class, 'subcategoria_id');
+    }
 }

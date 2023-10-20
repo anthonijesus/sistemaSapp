@@ -7,6 +7,9 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
+        <!-- Envía la dirección IP -->
+        <input type="hidden" name="direccion_ip" for="email" value="{{$_SERVER['REMOTE_ADDR']}}"/>
+
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
@@ -33,6 +36,14 @@
                 <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Recordar') }}</span>
             </label>
         </div>
+        
+        <!-- Mensaje de error para dirección IP -->
+        @if (session('error'))
+            <div class="mt-2 text-sm text-red-700">
+                {{ session('error') }}
+            </div>
+        @endif
+        
 
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))

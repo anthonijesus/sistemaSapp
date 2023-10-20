@@ -11,7 +11,7 @@ class categoriasController extends Controller
 {
     public function index(){
 
-        if (Auth::user()->rol != 'administrador') {
+        if (isset(Auth::user()->rol) && Auth::user()->rol != 'administrador') {
             echo "<script>window.location.href = '../';</script>";
         }
 

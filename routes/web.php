@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\solTIController;
 use App\Http\Controllers\categoriasController;
 use App\Http\Controllers\subcategoriasController;
 use App\Http\Controllers\solicitudesController;
@@ -35,7 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile/{id}',  [ProfileController::class, 'delete'])->name('profile.borrar');
 });
 
-Route::get('solicitudes/solTI', [solTIController::class, 'index'])->name('solTI');
+//Route::get('solicitudes/solTI', [solTIController::class, 'index'])->name('solTI');
 
 Route::controller(categoriasController::class)->group(function(){
     Route::get('solicitudes/categorias', 'index')->name('categorias');
@@ -50,6 +49,12 @@ Route::controller(subcategoriasController::class)->group(function(){
     Route::delete('solicitudes/subcategorias/{id}', 'delete')->name('subcategorias.borrar');
 });
 
-Route::get('solicitudes/solicitudes/{id}', [solicitudesController::class, 'index'])->name('solicitudes');
+
+Route::controller(solicitudesController::class)->group(function(){
+    Route::get('solicitudes/solicitudes/{id}', 'index')->name('solicitudes');
+    Route::post('solicitudes/solicitudes', 'crear')->name('solicitudes.crear');
+    Route::get('solicitudes/tabla_sol/{id}', 'show')->name('tabla_sol');
+    Route::get('solicitudes/tabla_soli/{id}', 'shows')->name('tabla_soli');
+});
 
 require __DIR__.'/auth.php';

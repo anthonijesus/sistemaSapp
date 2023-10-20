@@ -52,8 +52,8 @@ class ProfileController extends Controller
 
     public function index(){ //administra la vista y la tabla de usuarios
         
-        
-        if (Auth::user()->rol != 'administrador') {
+    
+        if (isset(Auth::user()->rol) && Auth::user()->rol != 'administrador') {
             echo "<script>window.location.href = '../';</script>";
         }
 
@@ -182,6 +182,7 @@ class ProfileController extends Controller
         if($id == 1){
             
             return Redirect::route('profile.usuarios')->with('error', 'No puede borrar el usuario administrador');
+            
         }else{
             
             User::destroy($id);

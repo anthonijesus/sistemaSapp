@@ -69,6 +69,8 @@
          var nombre = $(this).data('nombre');
          var descripcion = $(this).data('descripcion');
          var categoria = $(this).data('categoria');
+         var detalle = $(this).data('detalle');
+         var observacion = $(this).data('observacion');
 
          $("#ids").val(ids);
          $("#names").val(names);
@@ -78,6 +80,8 @@
          $("#nombre").val(nombre);
          $("#descripcion").val(descripcion);
          $("#categoria").val(categoria);
+         $("#detalle").val(detalle);
+         $("#observacion").val(observacion);
 
          urlFull = $('#editUser').attr('data-action').slice(0, -
          1); //esta linea accede a los atributos del formulario

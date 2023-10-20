@@ -13,4 +13,8 @@ class categorias extends Model
     {
         return $this->hasMany(subcategorias::class, 'categoria_id');
     }
+    public function tabla_sol()
+    {
+        return $this->hasMany(tabla_solicitudes::class, 'categoria_id');
+    }
 }
